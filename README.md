@@ -195,7 +195,7 @@ More in [Verdicts and score](docs/verdicts.md) and [Response](docs/response.md).
 | | Package | Install |
 |---|---|---|
 | 🟨 | [**JavaScript / TypeScript SDK**](packages/js/): typed, zero dependencies, Node, Bun, Deno and edge | `npm i @yeswecheck/sdk` |
-| ⌨️ | [**Command-line tool**](packages/cli/): one address or a whole CSV, from your terminal | `npx yeswecheck jane.doe@company.co.uk` |
+| ⌨️ | [**Command-line tool**](packages/cli/): one address or a whole CSV, from your terminal | `npx yeswecheck <email>` |
 
 ```ts
 import { YesWeCheck, suggestedEmail } from "@yeswecheck/sdk";
