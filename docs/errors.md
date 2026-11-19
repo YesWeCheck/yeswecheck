@@ -1,4 +1,4 @@
-<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › Errors · <a href="https://docs.yeswecheck.fr/uk">Full documentation</a></sub>
+<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › Errors · <a href="https://docs.yeswecheck.fr/uk/errors">Full documentation</a></sub>
 
 # Error codes
 
@@ -43,7 +43,7 @@ Messages may be reworded; `code` values do not change. The `message` is in Frenc
 | `429` | — | Rate limit (IP or widget), or too many concurrent requests | After `Retry-After`, or by reducing parallelism |
 | `5xx` | — | Incident on our side | Yes, with an increasing delay |
 
-MCP server tools return their errors in the tool result, with their own codes: see [AI assistants](https://docs.yeswecheck.fr/uk/connectors/mcp#errors).
+MCP server tools return their errors in the tool result, with their own codes: see [AI assistants](../integrations/mcp/README.md#errors).
 
 ## Details
 

@@ -1,4 +1,4 @@
-<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › Checks · <a href="https://docs.yeswecheck.fr/uk">Full documentation</a></sub>
+<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › Checks · <a href="https://docs.yeswecheck.fr/uk/checks">Full documentation</a></sub>
 
 # Checks
 

@@ -1,4 +1,4 @@
-<sub><a href="../../README.md">YesWeCheck</a> › <a href="../README.md">Docs</a> › Bulk lists · <a href="https://docs.yeswecheck.fr/uk">Full documentation</a></sub>
+<sub><a href="../../README.md">YesWeCheck</a> › <a href="../README.md">Docs</a> › Bulk lists · <a href="https://docs.yeswecheck.fr/uk/guides/batch">Full documentation</a></sub>
 
 # Batch processing
 

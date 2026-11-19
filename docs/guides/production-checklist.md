@@ -1,4 +1,4 @@
-<sub><a href="../../README.md">YesWeCheck</a> › <a href="../README.md">Docs</a> › Production checklist · <a href="https://docs.yeswecheck.fr/uk">Full documentation</a></sub>
+<sub><a href="../../README.md">YesWeCheck</a> › <a href="../README.md">Docs</a> › Production checklist · <a href="https://docs.yeswecheck.fr/uk/guides/production">Full documentation</a></sub>
 
 # Go to production
 

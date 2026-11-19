@@ -10,7 +10,7 @@
   <a href="https://www.npmjs.com/package/@yeswecheck/sdk"><img alt="npm" src="https://img.shields.io/npm/v/@yeswecheck/sdk?style=flat-square&color=22C55E&label=npm"></a>
   <a href="https://docs.yeswecheck.fr/uk"><img alt="API v2" src="https://img.shields.io/badge/API-v2-0B1220?style=flat-square"></a>
   <a href="openapi/openapi.yaml"><img alt="OpenAPI 3.0" src="https://img.shields.io/badge/OpenAPI-3.0-0B1220?style=flat-square"></a>
-  <a href="https://docs.yeswecheck.fr/uk/connectors/mcp"><img alt="MCP server" src="https://img.shields.io/badge/MCP-server-22C55E?style=flat-square"></a>
+  <a href="integrations/mcp/"><img alt="MCP server" src="https://img.shields.io/badge/MCP-server-22C55E?style=flat-square"></a>
   <a href="https://app.yeswecheck.fr/uk/register?src=github"><img alt="100 free credits" src="https://img.shields.io/badge/free-100%20credits-22C55E?style=flat-square"></a>
   <a href="LICENSE"><img alt="Licence: MIT" src="https://img.shields.io/badge/licence-MIT-64748B?style=flat-square"></a>
 </p>
@@ -216,23 +216,26 @@ Another language? The [OpenAPI specification](openapi/) generates a client in se
   <tr>
     <td width="25%" valign="top">
       <h4>🤖 AI assistants</h4>
-      MCP server for Claude, ChatGPT, Le Chat, Cursor and VS Code.<br>
-      <a href="https://docs.yeswecheck.fr/uk/connectors/mcp">Set up →</a>
+      <a href="integrations/mcp/"><img src=".github/assets/logos/claude.svg" width="36" alt="Claude" title="Claude"></a> <a href="integrations/mcp/"><img src=".github/assets/logos/openai.svg" width="36" alt="ChatGPT" title="ChatGPT"></a> <a href="integrations/mcp/"><img src=".github/assets/logos/mistral.svg" width="36" alt="Le Chat" title="Le Chat"></a> <a href="integrations/mcp/"><img src=".github/assets/logos/cursor.svg" width="36" alt="Cursor" title="Cursor"></a> <a href="integrations/mcp/"><img src=".github/assets/logos/vscode.svg" width="36" alt="VS Code" title="VS Code"></a><br>
+      MCP server with one-click install for Cursor and VS Code.<br>
+      <a href="integrations/mcp/">Set up →</a>
     </td>
     <td width="25%" valign="top">
-      <h4>⚙️ Make</h4>
-      Verify emails inside any scenario, no code.<br>
-      <a href="https://docs.yeswecheck.fr/uk/connectors/make">Set up →</a>
+      <h4>⚙️ Automation</h4>
+      <a href="integrations/make/"><img src=".github/assets/logos/make.svg" width="36" alt="Make" title="Make"></a><br>
+      The official Make app, plus recipes for Zapier and n8n.<br>
+      <a href="integrations/">Browse →</a>
     </td>
     <td width="25%" valign="top">
       <h4>📇 CRM and email tools</h4>
-      Brevo, HubSpot, Mailchimp, Mailjet, Klaviyo, Pipedrive, Google Sheets, Systeme.io, Positive User.<br>
-      <a href="https://docs.yeswecheck.fr/uk/connectors">Browse →</a>
+      <a href="integrations/connectors/hubspot.md"><img src=".github/assets/logos/hubspot.svg" width="36" alt="HubSpot" title="HubSpot"></a> <a href="integrations/connectors/brevo.md"><img src=".github/assets/logos/brevo.svg" width="36" alt="Brevo" title="Brevo"></a> <a href="integrations/connectors/mailchimp.md"><img src=".github/assets/logos/mailchimp.svg" width="36" alt="Mailchimp" title="Mailchimp"></a> <a href="integrations/connectors/klaviyo.md"><img src=".github/assets/logos/klaviyo.svg" width="36" alt="Klaviyo" title="Klaviyo"></a> <a href="integrations/connectors/mailjet.md"><img src=".github/assets/logos/mailjet.svg" width="36" alt="Mailjet" title="Mailjet"></a> <a href="integrations/connectors/pipedrive.md"><img src=".github/assets/logos/pipedrive.svg" width="36" alt="Pipedrive" title="Pipedrive"></a> <a href="integrations/connectors/google-sheets.md"><img src=".github/assets/logos/google-sheets.svg" width="36" alt="Google Sheets" title="Google Sheets"></a> <a href="integrations/connectors/systeme-io.md"><img src=".github/assets/logos/systeme-io.svg" width="36" alt="Systeme.io" title="Systeme.io"></a> <a href="integrations/connectors/positive-user.md"><img src=".github/assets/logos/positive-user.svg" width="36" alt="Positive User" title="Positive User"></a><br>
+      Clean lists in place, verdict written on every contact.<br>
+      <a href="integrations/connectors/">Browse →</a>
     </td>
     <td width="25%" valign="top">
       <h4>📝 Form widget</h4>
       Real-time checks on any sign-up form, one script tag, no key in the page.<br>
-      <a href="https://docs.yeswecheck.fr/uk/guides/widget">Set up →</a>
+      <a href="integrations/widget/">Set up →</a>
     </td>
   </tr>
 </table>
@@ -244,7 +247,7 @@ Another language? The [OpenAPI specification](openapi/) generates a client in se
 
 - **Branch on `result`**, and use `finalDecision` when you want your key's policy to decide for you.
 - **One key per use case.** For example, a key without SMTP for instant checks while the user types, and a key with SMTP when the form is submitted.
-- **Keep API keys on your server.** In the browser, use the [form widget](https://docs.yeswecheck.fr/uk/guides/widget): it needs no key in the page.
+- **Keep API keys on your server.** In the browser, use the [form widget](integrations/widget/): it needs no key in the page.
 - **Treat `unknown` kindly.** It is not a failure and costs nothing: accept the address and keep an eye on bounces.
 - **Store results.** An address rarely changes state overnight: keep verdicts for a while and skip repeat checks.
 
@@ -258,6 +261,7 @@ See the [production checklist](docs/guides/production-checklist.md) before going
 | [`openapi/`](openapi/) | The OpenAPI 3.0 specification of the public API |
 | [`packages/js/`](packages/js/) | `@yeswecheck/sdk`, the JavaScript and TypeScript SDK |
 | [`packages/cli/`](packages/cli/) | `yeswecheck`, the command-line tool |
+| [`integrations/`](integrations/) | MCP server setup and `server.json`, Make app, CRM connectors, form widget, Zapier and n8n |
 
 ## Pricing
 

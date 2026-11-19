@@ -1,4 +1,4 @@
-<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › Quickstart · <a href="https://docs.yeswecheck.fr/uk">Full documentation</a></sub>
+<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › Quickstart · <a href="https://docs.yeswecheck.fr/uk/getting-started">Full documentation</a></sub>
 
 # Quick start
 
@@ -61,6 +61,8 @@ console.log(verdict.result, verdict.score); // "valid" 100
 <summary><b>Python</b></summary>
 
 ```python
+import os
+import requests
 
 res = requests.post(
     "https://api.yeswecheck.fr/v2/email/validate",
@@ -152,4 +154,4 @@ The [Verdicts and score](verdicts.md) page explains how each verdict is reached.
 ## What next
   - **[Protect your key](authentication.md)** · Security. IP and origin restrictions, credit caps, rotation without downtime.
   - **[Verify at sign-up](guides/signup-validation.md)** · Guide. Complete decision logic, correction suggestions, error handling.
-  - **[Add the widget](https://docs.yeswecheck.fr/uk/guides/widget)** · Guide. One script tag, no key in the page.
+  - **[Add the widget](../integrations/widget/README.md)** · Guide. One script tag, no key in the page.

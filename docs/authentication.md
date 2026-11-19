@@ -1,4 +1,4 @@
-<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › Authentication · <a href="https://docs.yeswecheck.fr/uk">Full documentation</a></sub>
+<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › Authentication · <a href="https://docs.yeswecheck.fr/uk/authentication">Full documentation</a></sub>
 
 # Authentication and API keys
 
@@ -103,7 +103,7 @@ A key can be attached to a policy (**Validation rules** in the dashboard) that t
 
 ### AI assistant keys
 
-The [MCP server](https://docs.yeswecheck.fr/uk/connectors/mcp) (`https://api.yeswecheck.fr/mcp`) accepts a key with `server` scope, with the same `Authorization: Bearer` header. Assistants such as Claude or ChatGPT connect instead through **OAuth**: on authorisation, YesWeCheck creates a key dedicated to the application, labelled **MCP · OAuth** in **API keys**. Its secret is never shown and it cannot be rotated; revoking it disconnects the application. B2B email finding is only available through the MCP server, if the key has the **B2B Email Finder for AI agents** option.
+The [MCP server](../integrations/mcp/README.md) (`https://api.yeswecheck.fr/mcp`) accepts a key with `server` scope, with the same `Authorization: Bearer` header. Assistants such as Claude or ChatGPT connect instead through **OAuth**: on authorisation, YesWeCheck creates a key dedicated to the application, labelled **MCP · OAuth** in **API keys**. Its secret is never shown and it cannot be rotated; revoking it disconnects the application. B2B email finding is only available through the MCP server, if the key has the **B2B Email Finder for AI agents** option.
 
 <a id="replace-a-key-without-downtime"></a>
 
@@ -128,6 +128,6 @@ If a leak is confirmed, **revoke** the key: it is rejected immediately (`401 Inv
 
 - One key per use and per environment: production, testing, automation tool, one for each widget.
 - The secret lives server-side, in an environment variable or a secrets vault. Never in a Git repository, a mobile app or JavaScript served to the browser.
-- For a web form, expose no key at all: use the [widget](https://docs.yeswecheck.fr/uk/guides/widget), designed for exactly that.
+- For a web form, expose no key at all: use the [widget](../integrations/widget/README.md), designed for exactly that.
 - Set a credit cap on every key that has SMTP enabled.
 - Restrict server keys to your servers' outbound IP when it is fixed.

@@ -1,4 +1,4 @@
-<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › FAQ · <a href="https://docs.yeswecheck.fr/uk">Full documentation</a></sub>
+<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › FAQ · <a href="https://docs.yeswecheck.fr/uk/faq">Full documentation</a></sub>
 
 # Frequently asked questions
 
@@ -61,53 +61,53 @@ A **typo** (`typoDomain`) is a user error: `gmial.com` instead of `gmail.com`. A
 
 ### Can I call the API from the browser?
 
-Not with a key: every visitor would see it. Use the [widget](https://docs.yeswecheck.fr/uk/guides/widget), designed for this case, or route the call through your server. The widget also covers domain autocompletion and typo detection, with no key in the page.
+Not with a key: every visitor would see it. Use the [widget](../integrations/widget/README.md), designed for this case, or route the call through your server. The widget also covers domain autocompletion and typo detection, with no key in the page.
 
 ### Can I verify a list through the API?
 
-Not in REST: batches are started from the dashboard. An agent can, however, start and track a batch of 5,000 addresses with the `validate_emails_batch` tool of the [MCP server](https://docs.yeswecheck.fr/uk/connectors/mcp), using an API key. For a continuous flow, call `POST /v2/email/validate` address by address, within the [limit of 100 requests per minute](rate-limits.md).
+Not in REST: batches are started from the dashboard. An agent can, however, start and track a batch of 5,000 addresses with the `validate_emails_batch` tool of the [MCP server](../integrations/mcp/README.md), using an API key. For a continuous flow, call `POST /v2/email/validate` address by address, within the [limit of 100 requests per minute](rate-limits.md).
 
 ### Can I verify my Brevo contacts without exporting them?
 
-Yes, with the [Brevo connector](https://docs.yeswecheck.fr/uk/connectors/brevo): YesWeCheck reads the chosen list, verifies it like a batch and writes the verdict on each contact. It can also automatically verify each new contact. Mailjet, Klaviyo and Systeme.io are also covered (see below); see [connectors](https://docs.yeswecheck.fr/uk/connectors).
+Yes, with the [Brevo connector](../integrations/connectors/brevo.md): YesWeCheck reads the chosen list, verifies it like a batch and writes the verdict on each contact. It can also automatically verify each new contact. Mailjet, Klaviyo and Systeme.io are also covered (see below); see [connectors](../integrations/connectors/README.md).
 
 ### Can I verify the emails of my HubSpot contacts?
 
-Yes, with the [HubSpot connector](https://docs.yeswecheck.fr/uk/connectors/hubspot) and a HubSpot service key: YesWeCheck verifies a list or all your contacts, writes the verdict in four `ywc_*` properties (**YesWeCheck** group) and can automatically verify new contacts in the lists you monitor. You can also verify a single contact from the customer area.
+Yes, with the [HubSpot connector](../integrations/connectors/hubspot.md) and a HubSpot service key: YesWeCheck verifies a list or all your contacts, writes the verdict in four `ywc_*` properties (**YesWeCheck** group) and can automatically verify new contacts in the lists you monitor. You can also verify a single contact from the customer area.
 
 ### Can I verify the emails of my Pipedrive people?
 
-Yes, with the [Pipedrive connector](https://docs.yeswecheck.fr/uk/connectors/pipedrive) and your Pipedrive API token: YesWeCheck verifies all your people or a filter, writes the verdict in four **YWC** custom fields and can automatically verify each new person. Only each person's primary address is verified. You can also verify a single person from the customer area.
+Yes, with the [Pipedrive connector](../integrations/connectors/pipedrive.md) and your Pipedrive API token: YesWeCheck verifies all your people or a filter, writes the verdict in four **YWC** custom fields and can automatically verify each new person. Only each person's primary address is verified. You can also verify a single person from the customer area.
 
 ### Can I clean my Mailchimp audiences?
 
-Yes, with the [Mailchimp connector](https://docs.yeswecheck.fr/uk/connectors/mailchimp) and a Mailchimp API key: YesWeCheck verifies an audience, a segment or a tag, writes the verdict in four `YWC_*` merge fields (or as tags, if you prefer) and can automatically verify new subscribers. Invalid addresses can be tagged, unsubscribed or archived; Mailchimp no longer counts archived contacts in your plan.
+Yes, with the [Mailchimp connector](../integrations/connectors/mailchimp.md) and a Mailchimp API key: YesWeCheck verifies an audience, a segment or a tag, writes the verdict in four `YWC_*` merge fields (or as tags, if you prefer) and can automatically verify new subscribers. Invalid addresses can be tagged, unsubscribed or archived; Mailchimp no longer counts archived contacts in your plan.
 
 ### Can I clean my Mailjet lists?
 
-Yes, with the [Mailjet connector](https://docs.yeswecheck.fr/uk/connectors/mailjet), your Mailjet API key and secret key: YesWeCheck verifies all your contacts or a list, writes the verdict in four `ywc_*` contact properties and can automatically verify new contacts and additions to your lists. Invalid addresses can be grouped in a list, unsubscribed from the cleaned list or excluded from campaigns. Each Mailjet sub-account connects with its own keys.
+Yes, with the [Mailjet connector](../integrations/connectors/mailjet.md), your Mailjet API key and secret key: YesWeCheck verifies all your contacts or a list, writes the verdict in four `ywc_*` contact properties and can automatically verify new contacts and additions to your lists. Invalid addresses can be grouped in a list, unsubscribed from the cleaned list or excluded from campaigns. Each Mailjet sub-account connects with its own keys.
 
 ### Can I clean my Klaviyo lists and segments?
 
-Yes, with the [Klaviyo connector](https://docs.yeswecheck.fr/uk/connectors/klaviyo) and a private API key: YesWeCheck verifies all your profiles, a list or a segment, writes the verdict in four `ywc_*` profile properties and can automatically verify new profiles and entries into your lists and segments. Invalid addresses can be grouped in a list, removed from the cleaned list or suppressed in the Klaviyo sense: they no longer receive marketing emails and no longer count towards the active profiles in your plan.
+Yes, with the [Klaviyo connector](../integrations/connectors/klaviyo.md) and a private API key: YesWeCheck verifies all your profiles, a list or a segment, writes the verdict in four `ywc_*` profile properties and can automatically verify new profiles and entries into your lists and segments. Invalid addresses can be grouped in a list, removed from the cleaned list or suppressed in the Klaviyo sense: they no longer receive marketing emails and no longer count towards the active profiles in your plan.
 
 ### Can I verify my Systeme.io contacts?
 
-Yes, with the [Systeme.io connector](https://docs.yeswecheck.fr/uk/connectors/systeme-io) and a public API key: YesWeCheck verifies all your contacts or those carrying a tag, writes the verdict in four **YWC** contact fields and can automatically verify new contacts and those that receive a watched tag. Invalid addresses can be given a quarantine tag; a Systeme.io automation rule triggered by that tag unsubscribes them from your campaigns. No contact is deleted.
+Yes, with the [Systeme.io connector](../integrations/connectors/systeme-io.md) and a public API key: YesWeCheck verifies all your contacts or those carrying a tag, writes the verdict in four **YWC** contact fields and can automatically verify new contacts and those that receive a watched tag. Invalid addresses can be given a quarantine tag; a Systeme.io automation rule triggered by that tag unsubscribes them from your campaigns. No contact is deleted.
 
 ### Can I clean my Positive User (formerly Sarbacane) contacts?
 
-Yes, with the [Positive User connector](https://docs.yeswecheck.fr/uk/connectors/positive-user), your User.com workspace address and a public API key: YesWeCheck verifies all your contacts, a list, a tag or a segment, writes the verdict in four **YWC** attributes and can automatically verify new contacts. Invalid addresses can be tagged, unsubscribed or banned. The old Sarbacane interface, which has a separate API, is not covered.
+Yes, with the [Positive User connector](../integrations/connectors/positive-user.md), your User.com workspace address and a public API key: YesWeCheck verifies all your contacts, a list, a tag or a segment, writes the verdict in four **YWC** attributes and can automatically verify new contacts. Invalid addresses can be tagged, unsubscribed or banned. The old Sarbacane interface, which has a separate API, is not covered.
 
 ### Can I verify a list of emails in Google Sheets?
 
-Yes, with the [Google Sheets connector](https://docs.yeswecheck.fr/uk/connectors/google-sheets): connect your Google account, then choose the sheet and the email column. YesWeCheck only accesses the files you choose, verifies the addresses like a batch and writes the verdict in four columns added to the right of your data. Rows added later can be verified automatically.
+Yes, with the [Google Sheets connector](../integrations/connectors/google-sheets.md): connect your Google account, then choose the sheet and the email column. YesWeCheck only accesses the files you choose, verifies the addresses like a batch and writes the verdict in four columns added to the right of your data. Rows added later can be verified automatically.
 
 <a id="use-yeswecheck-from-chatgpt-or-claude"></a>
 
 ### Can I use YesWeCheck from ChatGPT or Claude?
 
-Yes. Add the [MCP server](https://docs.yeswecheck.fr/uk/connectors/mcp) `https://api.yeswecheck.fr/mcp` as a connector in Claude, ChatGPT, Le Chat, Claude Code, Cursor or VS Code, then authorise access on the YesWeCheck page that opens. The assistant verifies addresses and lists, and finds a person's work email (20 searches per day), with your settings and your credits.
+Yes. Add the [MCP server](../integrations/mcp/README.md) `https://api.yeswecheck.fr/mcp` as a connector in Claude, ChatGPT, Le Chat, Claude Code, Cursor or VS Code, then authorise access on the YesWeCheck page that opens. The assistant verifies addresses and lists, and finds a person's work email (20 searches per day), with your settings and your credits.
 
 ### How do I test without spending credits?
 
@@ -115,7 +115,7 @@ Use a key **without SMTP**: all the other checks are free. `ywc_test_` keys work
 
 ### Can I check my balance through the API?
 
-Yes: `GET /v2/me` returns your organisation's balance and the calling key's usage, free of charge. You can also read `metadata.credits.remaining` in validation responses with SMTP, and turn on balance alerts in **Settings → Notifications**. An agent connected to the [MCP server](https://docs.yeswecheck.fr/uk/connectors/mcp) reads the balance with the `get_credits` tool.
+Yes: `GET /v2/me` returns your organisation's balance and the calling key's usage, free of charge. You can also read `metadata.credits.remaining` in validation responses with SMTP, and turn on balance alerts in **Settings → Notifications**. An agent connected to the [MCP server](../integrations/mcp/README.md) reads the balance with the `get_credits` tool.
 
 ### Are there SDKs?
 

@@ -1,4 +1,4 @@
-<sub><a href="../../README.md">YesWeCheck</a> › <a href="../README.md">Docs</a> › Autocomplete · <a href="https://docs.yeswecheck.fr/uk">Full documentation</a></sub>
+<sub><a href="../../README.md">YesWeCheck</a> › <a href="../README.md">Docs</a> › Autocomplete · <a href="https://docs.yeswecheck.fr/uk/guides/autocomplete">Full documentation</a></sub>
 
 # Autocomplete, typos and enrichment
 
@@ -17,7 +17,7 @@ These endpoints help users enter an address correctly **before** you verify it. 
 All of them require a key. For the first two, used while users type in your forms, there are two ways to identify yourself:
 
 - **from your server**, with your API key in `Authorization: Bearer …`;
-- **from a web page**, with the [widget](https://docs.yeswecheck.fr/uk/guides/widget): it sends the widget ID, with no key in the page, and the API checks that the page is served from an allowed domain of the linked `widget` key.
+- **from a web page**, with the [widget](../../integrations/widget/README.md): it sends the widget ID, with no key in the page, and the API checks that the page is served from an allowed domain of the linked `widget` key.
 
 Each call counts towards the [key's call limit](../rate-limits.md#limits-per-api-key), on top of the per-IP limit.
 

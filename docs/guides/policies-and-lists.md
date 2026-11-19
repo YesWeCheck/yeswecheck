@@ -1,4 +1,4 @@
-<sub><a href="../../README.md">YesWeCheck</a> › <a href="../README.md">Docs</a> › Policies and lists · <a href="https://docs.yeswecheck.fr/uk">Full documentation</a></sub>
+<sub><a href="../../README.md">YesWeCheck</a> › <a href="../README.md">Docs</a> › Policies and lists · <a href="https://docs.yeswecheck.fr/uk/guides/policies-lists">Full documentation</a></sub>
 
 # Validation policies and lists
 

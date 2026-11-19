@@ -1,4 +1,4 @@
-<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › Rate limits · <a href="https://docs.yeswecheck.fr/uk">Full documentation</a></sub>
+<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › Rate limits · <a href="https://docs.yeswecheck.fr/uk/rate-limits">Full documentation</a></sub>
 
 # Rate limits
 
@@ -11,7 +11,7 @@
 | `GET /v2/billing/catalog` | 120 requests per minute | per calling IP |
 | `GET /v2/widget/config` | 120 requests per minute | per visitor IP |
 | `POST /v2/widget/validate` | 60 requests per minute | per visitor IP, across all widgets |
-| Widget (anti-abuse) | Limits per IP, per device and per day, configurable per widget | see [Widget](https://docs.yeswecheck.fr/uk/guides/widget#security-at-a-glance) |
+| Widget (anti-abuse) | Limits per IP, per device and per day, configurable per widget | see [Widget](../integrations/widget/README.md#security-at-a-glance) |
 | `POST /mcp` (MCP server) | 1,200 requests per minute | per calling IP |
 | All routes | 100 requests **in progress at the same time** | per calling IP |
 
@@ -21,7 +21,7 @@
 
 ## Limits per API key
 
-Each call authenticated with an API key is also counted **per key**, whatever the calling IP: `POST /v2/email/validate`, `POST /v2/email/enrich`, the suggestions, `POST /v2/widget/validate` and each request to the [MCP server](https://docs.yeswecheck.fr/uk/connectors/mcp) (verifying a list with an immediate response also counts once per address). The widget uses the `widget` key linked to it, including for the suggestions shown while the user types.
+Each call authenticated with an API key is also counted **per key**, whatever the calling IP: `POST /v2/email/validate`, `POST /v2/email/enrich`, the suggestions, `POST /v2/widget/validate` and each request to the [MCP server](../integrations/mcp/README.md) (verifying a list with an immediate response also counts once per address). The widget uses the `widget` key linked to it, including for the suggestions shown while the user types.
 
 | Window | Default limit |
 |---|---|

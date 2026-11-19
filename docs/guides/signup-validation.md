@@ -1,4 +1,4 @@
-<sub><a href="../../README.md">YesWeCheck</a> › <a href="../README.md">Docs</a> › Sign-up validation · <a href="https://docs.yeswecheck.fr/uk">Full documentation</a></sub>
+<sub><a href="../../README.md">YesWeCheck</a> › <a href="../README.md">Docs</a> › Sign-up validation · <a href="https://docs.yeswecheck.fr/uk/guides/validate-email">Full documentation</a></sub>
 
 # Verify an address from a server
 
@@ -12,7 +12,7 @@ Typical use cases: sign-up, customer account creation, adding a contact to a CRM
 |---|---|
 | Filter out typos, disposable addresses and dead domains, at no cost | SMTP disabled |
 | Confirm that the mailbox exists | SMTP enabled, with a credit cap |
-| High-traffic public form | Prefer the [widget](https://docs.yeswecheck.fr/uk/guides/widget), designed to prevent abuse |
+| High-traffic public form | Prefer the [widget](../../integrations/widget/README.md), designed to prevent abuse |
 
 ## A minimal client
 
@@ -82,6 +82,8 @@ export class YwcError extends Error {
 <summary><b>Python</b></summary>
 
 ```python
+import os
+import requests
 
 class YwcError(Exception):
     def __init__(self, status, body, retry_after=None):
@@ -139,6 +141,7 @@ function ywc_validate_email(string $email): array
 ## Complete decision logic
 
 ```ts
+import type { ValidationResponse } from './ywc';
 
 type Decision =
   | { action: 'accept' }
@@ -206,7 +209,7 @@ try {
 
 ## Tips
 
-- **Verify at the right moment**: when the form is submitted, server side, not on every keystroke. For live input, use the [widget](https://docs.yeswecheck.fr/uk/guides/widget) or the [autocomplete endpoints](autocomplete.md).
+- **Verify at the right moment**: when the form is submitted, server side, not on every keystroke. For live input, use the [widget](../../integrations/widget/README.md) or the [autocomplete endpoints](autocomplete.md).
 - **Store `metadata.requestId`** with the address: it is the reference to give to support.
 - **Don't re-verify the same address in a loop**: a `valid` or `invalid` result stays reliable for several days; an `unknown` is worth retrying later.
 - **More than a few hundred addresses** at once: use [batch processing](bulk-lists.md).

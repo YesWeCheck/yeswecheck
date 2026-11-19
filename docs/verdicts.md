@@ -1,4 +1,4 @@
-<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › Verdicts and score · <a href="https://docs.yeswecheck.fr/uk">Full documentation</a></sub>
+<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › Verdicts and score · <a href="https://docs.yeswecheck.fr/uk/verdicts">Full documentation</a></sub>
 
 # Verdicts and score
 

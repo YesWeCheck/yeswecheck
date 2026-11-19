@@ -1,4 +1,4 @@
-<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › Response · <a href="https://docs.yeswecheck.fr/uk">Full documentation</a></sub>
+<sub><a href="../README.md">YesWeCheck</a> › <a href="README.md">Docs</a> › Response · <a href="https://docs.yeswecheck.fr/uk/concepts/response">Full documentation</a></sub>
 
 # Anatomy of the response
 
@@ -110,7 +110,7 @@ Priority order for suggesting a correction: `typoCorrection.correctedEmail` (ver
 
 > [!IMPORTANT]
 > **In a server call, that is your server**
-> When your backend calls the API, the IP analysed is **your server's**, not the end user's. You will then see `DATACENTER_IP` in `warnings` on every call. Disable `network` on server keys, or ignore the network codes. This check only makes sense for the [widget](https://docs.yeswecheck.fr/uk/guides/widget), where the call comes from the end user's browser.
+> When your backend calls the API, the IP analysed is **your server's**, not the end user's. You will then see `DATACENTER_IP` in `warnings` on every call. Disable `network` on server keys, or ignore the network codes. This check only makes sense for the [widget](../integrations/widget/README.md), where the call comes from the end user's browser.
 
 ## `warnings`: the risk signals
 

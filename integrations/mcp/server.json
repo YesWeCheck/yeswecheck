@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.YesWeCheck/yeswecheck",
+  "title": "YesWeCheck",
+  "description": "Verify email addresses, clean lists and find B2B emails from your AI assistant.",
+  "repository": {
+    "url": "https://github.com/YesWeCheck/yeswecheck",
+    "source": "github",
+    "subfolder": "integrations/mcp"
+  },
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.yeswecheck.fr/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Optional: Bearer followed by a YesWeCheck MCP key (ywc_live_…), for clients without a browser. Interactive clients use OAuth instead.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
