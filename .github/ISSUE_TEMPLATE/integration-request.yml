@@ -1,0 +1,27 @@
+name: 🧩 Integration request
+description: Ask for a connector, SDK language or framework example.
+labels: ["integration request"]
+body:
+  - type: input
+    id: tool
+    attributes:
+      label: Tool, language or framework
+      placeholder: "e.g. Salesforce, Go SDK, SvelteKit example"
+    validations:
+      required: true
+  - type: textarea
+    id: usecase
+    attributes:
+      label: What would you use it for?
+      description: Your use case helps us prioritise.
+    validations:
+      required: true
+  - type: dropdown
+    id: today
+    attributes:
+      label: How do you verify emails today?
+      options:
+        - I call the API directly
+        - Through another integration
+        - I don't yet
+        - Other

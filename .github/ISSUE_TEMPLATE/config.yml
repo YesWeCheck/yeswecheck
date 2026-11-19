@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentation
+    url: https://docs.yeswecheck.fr/uk
+    about: Guides, API reference and FAQ.
+  - name: ✉️ Account, billing or a specific verdict
+    url: mailto:contact@yeswecheck.fr
+    about: Write to us privately. Never post your API key or your users' addresses in a public issue.
+  - name: 🔒 Security vulnerability
+    url: https://github.com/YesWeCheck/yeswecheck/security/advisories/new
+    about: Report it privately, not in a public issue.

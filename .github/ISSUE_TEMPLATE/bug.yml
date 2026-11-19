@@ -1,0 +1,38 @@
+name: 🐛 Problem report
+description: Something in this repository (docs, OpenAPI, SDK, example) is wrong or broken.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this! **Never paste an API key or a real person's email address**: use placeholders.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Documentation
+        - OpenAPI specification
+        - SDK or CLI
+        - Example
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to reproduce
+      description: Code, request or steps. Include the `metadata.requestId` or `debug_ref` of the response if you have one.
+      render: shell
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "e.g. Node 22, @yeswecheck/sdk 0.1.0, macOS"

@@ -1,0 +1,876 @@
+openapi: 3.0.3
+info:
+  title: YesWeCheck API
+  version: '2.0'
+  description: |
+    YesWeCheck public API: email address verification, input assistance and enrichment.
+
+    **Base URL**: `https://api.yeswecheck.fr`. API routes are prefixed with `/v2`; only `/health` is served outside the prefix.
+
+    **Authentication**: `Authorization: Bearer ywc_live_…` (or `ywc_test_…`, same behaviour). The `X-API-Key` header is not read.
+
+    **SMTP**: with an API key, the key's configuration decides whether the SMTP check runs. The `smtp` field in the body is ignored.
+
+    **Credits**: 1 credit is debited per verification where SMTP was enabled and the final verdict is not `unknown`. All other endpoints are free.
+
+    **Errors**: the `message` is in French by default; send `Accept-Language: en` (or `en-GB`) to receive it in English. Always test the `code`, never the message.
+
+    This specification only covers routes reachable with an API key or without authentication. Batch processing and the management of keys, widgets and billing are handled from the dashboard at https://app.yeswecheck.fr/uk.
+  contact:
+    name: YesWeCheck Support
+    email: contact@yeswecheck.fr
+    url: https://docs.yeswecheck.fr/uk
+servers:
+  - url: https://api.yeswecheck.fr
+    description: Production
+security:
+  - apiKey: []
+tags:
+  - name: Validation
+    x-displayName: Validation
+    description: Verify an email address and get a verdict.
+  - name: Suggestions
+    x-displayName: Suggestions
+    description: Input assistance, with no SMTP and no credits.
+  - name: Enrichment
+    x-displayName: Enrichment
+    description: First name, last name, gender and presumed age inferred from an address.
+  - name: Platform
+    x-displayName: Platform
+    description: Plan catalogue and API status.
+
+paths:
+  /v2/email/validate:
+    post:
+      operationId: validate-email
+      tags: [Validation]
+      summary: Verify an address
+      description: |
+        Runs the checks enabled on the key and returns the verdict (`result`), the score (0 to 100) and the details of each check in `features`.
+
+        - Always responds `200` when the verification completes, whatever the verdict.
+        - SMTP runs if, and only if, the key has it enabled. Allow a 30 s client timeout in that case.
+        - A check disabled on the key is absent from `features`. `syntax` and `dns` are always present.
+        - Limit: 100 requests per minute per IP.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateRequest'
+            examples:
+              simple:
+                summary: Common case
+                value:
+                  email: john.smith@gmail.com
+              avecPays:
+                summary: Reference country for the presumed age
+                value:
+                  email: john.smith@gmail.com
+                  country: BE
+      responses:
+        '200':
+          description: Verification completed.
+          headers:
+            RateLimit-Limit:
+              $ref: '#/components/headers/RateLimitLimit'
+            RateLimit-Remaining:
+              $ref: '#/components/headers/RateLimitRemaining'
+            RateLimit-Reset:
+              $ref: '#/components/headers/RateLimitReset'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+              examples:
+                valid:
+                  summary: Mailbox confirmed by SMTP
+                  value:
+                    result: valid
+                    score: 100
+                    freeProvider: true
+                    businessEmail: false
+                    disposable: false
+                    alias: false
+                    finalDecision: accepted
+                    policy: { decision: accepted, reasons: [], rejectedByClientConfig: false }
+                    features:
+                      syntax: { result: valid, score: 100, message: '…', details: { normalizedEmail: john.smith@gmail.com } }
+                      dns: { result: valid, score: 100, message: '…', reasonCode: MX_FOUND }
+                      smtp: { result: valid, score: 100, message: '…', reasonCode: MAILBOX_EXISTS, details: { exists: true, canReceiveMail: true, smtpCode: 250 } }
+                      disposable: { result: valid, score: 100, message: '…' }
+                      typoDomain: { result: valid, score: 100, message: '…' }
+                    metadata:
+                      requestId: 0192f6b4-6a1e-7c11-9d0a-3f2b8c4e1a77
+                      timestamp: '2026-10-15T09:12:44.512Z'
+                      processingTime: 1840
+                      credits: { used: 1, remaining: 4819, breakdown: { syntax: 0, dns: 0, smtp: 1, disposable: 0, roleAccount: 0, profanity: 0, randomDetection: 0, typoDomain: 0, enrichment: 0, listCheck: 0 } }
+                      apiVersion: '2.0'
+                disposable:
+                  summary: Disposable address, key without SMTP
+                  value:
+                    result: risky
+                    score: 40
+                    freeProvider: true
+                    businessEmail: false
+                    disposable: true
+                    alias: false
+                    finalDecision: accepted
+                    policy: { decision: accepted, reasons: [], rejectedByClientConfig: false }
+                    warnings:
+                      - { code: DISPOSABLE_EMAIL, severity: warning, message: Disposable / throwaway email provider }
+                    features:
+                      syntax: { result: valid, score: 100, message: '…' }
+                      dns: { result: valid, score: 100, message: '…', reasonCode: MX_FOUND }
+                      disposable: { result: invalid, score: 0, message: '…', reasonCode: DISPOSABLE_DOMAIN }
+                    metadata:
+                      requestId: 0192f6b4-7d02-7a3c-8e55-0b4c2f9d6e10
+                      timestamp: '2026-10-15T09:13:02.104Z'
+                      processingTime: 96
+                      credits: { used: 0, remaining: 0, breakdown: { syntax: 0, dns: 0, smtp: 0, disposable: 0, roleAccount: 0, profanity: 0, randomDetection: 0, typoDomain: 0, enrichment: 0, listCheck: 0 } }
+                      apiVersion: '2.0'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '402':
+          $ref: '#/components/responses/InsufficientCredits'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /v2/email/enrich:
+    post:
+      operationId: enrich-email
+      tags: [Enrichment]
+      summary: Enrich an address
+      description: Infers a first name, a last name, a gender and a presumed age from the local part. No verification of the address, no credits.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  example: john.smith@gmail.com
+                country:
+                  type: string
+                  description: Reference country for the age (ISO 3166-1 alpha-2 or alpha-3). Otherwise inferred from the domain's country-code extension, otherwise FR.
+                  example: FR
+      responses:
+        '200':
+          description: Enrichment result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrichmentFeature'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /v2/email/suggest/domain:
+    post:
+      operationId: suggest-domain
+      tags: [Suggestions]
+      summary: Suggest domains
+      description: Popular email domains in a country, filtered by what the user has typed after the `@`. A key is required — an API key, or a `widgetId` sent by the widget from a web page. Limit of 60 requests per minute per IP, plus the key's call limit.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                country:
+                  type: string
+                  description: Country code (`FR`, `DE`, `BE`…) or `GLOBAL`.
+                  default: GLOBAL
+                  example: FR
+                partial:
+                  type: string
+                  description: Partial domain input.
+                  example: ho
+                count:
+                  type: integer
+                  description: Maximum number of suggestions.
+                  default: 15
+                  example: 3
+                maxResults:
+                  type: integer
+                  description: Legacy alias of `count`.
+                  deprecated: true
+                type:
+                  type: string
+                  enum: [webmail, isp, professional, secure]
+                widgetId:
+                  type: string
+                  format: uuid
+                  description: Keyless widget only, without an `Authorization` header — the widget's identifier. The API resolves its `widget` key and checks the page's origin.
+      responses:
+        '200':
+          description: Suggestions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  country: { type: string, example: FR }
+                  count: { type: integer, example: 3 }
+                  type: { type: string, nullable: true }
+                  partial: { type: string, nullable: true, example: ho }
+                  suggestions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DomainSuggestion'
+                  total: { type: integer, example: 2 }
+              example:
+                country: FR
+                count: 3
+                type: null
+                partial: ho
+                suggestions:
+                  - { domain: hotmail.fr, provider: Microsoft, type: webmail, popularity: 13, score: 88.3 }
+                  - { domain: yahoo.fr, provider: Yahoo, type: webmail, popularity: 11, score: 54.2 }
+                total: 2
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /v2/email/suggest/domain/countries:
+    get:
+      operationId: list-suggest-countries
+      tags: [Suggestions]
+      summary: List covered countries
+      description: Countries for which domain suggestions exist.
+      responses:
+        '200':
+          description: List of countries.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  countries:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code: { type: string, example: FR }
+                        name: { type: string, example: France }
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v2/email/suggest/typo-domain:
+    post:
+      operationId: suggest-typo-domain
+      tags: [Suggestions]
+      summary: Detect a typo
+      description: |
+        Same engine and same normalisation as verification. Send an address (`email`) or a domain (`domain`, alias `input`). A key is required — an API key, or a `widgetId` sent by the widget from a web page. Limit of 60 requests per minute per IP, plus the key's call limit.
+
+        `details.detectionMethod` gives the source: `list` (correction reference list), `typosquat` (known trap domain), `algorithm` (distance engine, with `patterns`, `transformations` and `difficulty`).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string, maxLength: 320, example: john@gmial.com }
+                domain: { type: string, maxLength: 320, example: gmial.com }
+                input: { type: string, maxLength: 320, description: Alias of `domain`. }
+                widgetId:
+                  type: string
+                  format: uuid
+                  description: Keyless widget only, without an `Authorization` header — the widget's identifier. The API resolves its `widget` key and checks the page's origin.
+      responses:
+        '200':
+          description: Detection result.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  input: { type: string }
+                  inputDomain: { type: string }
+                  detected: { type: boolean }
+                  suggestedDomain: { type: string, nullable: true }
+                  suggestedEmail: { type: string, nullable: true, description: '`null` if the input contains no `@`.' }
+                  score: { type: integer }
+                  message: { type: string }
+                  reasonCode: { type: string, nullable: true }
+                  details: { type: object, nullable: true, additionalProperties: true }
+              example:
+                input: john@gmial.com
+                inputDomain: gmial.com
+                detected: true
+                suggestedDomain: gmail.com
+                suggestedEmail: john@gmail.com
+                score: 100
+                message: Possible typo in domain. Did you mean john@gmail.com?
+                reasonCode: TYPO_DETECTED
+                details: { suggestedDomain: gmail.com, suggestedEmail: john@gmail.com, typoType: character_swap, similarityScore: 90, detectionMethod: list }
+        '400':
+          description: Empty input, input longer than 320 characters, or invalid domain.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /v2/email/suggest/localpart:
+    post:
+      operationId: suggest-localpart
+      tags: [Suggestions]
+      summary: Generate local parts
+      description: Common combinations (`prenom.nom` = first.last, `p.nom` = f.last…) ranked by frequency. The `pattern` values stay in French. These are guesses, to be verified before use.
+      parameters:
+        - name: domain
+          in: query
+          required: false
+          description: Adds the full `email` field to each suggestion.
+          schema: { type: string, example: example.com }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [firstName, lastName]
+              properties:
+                firstName: { type: string, example: John }
+                lastName: { type: string, example: Smith }
+                includeNumbers: { type: boolean, default: false }
+                maxResults: { type: integer, default: 20 }
+                partial: { type: string, description: 'Input already typed, used as a filter.' }
+      responses:
+        '200':
+          description: Suggestions.
+          content:
+            application/json:
+              example:
+                firstName: John
+                lastName: Smith
+                domain: example.com
+                partial: null
+                suggestions:
+                  - { localpart: john.smith, pattern: prenom.nom, popularity: 10, email: john.smith@example.com }
+                  - { localpart: j.smith, pattern: p.nom, popularity: 9, email: j.smith@example.com }
+                total: 2
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v2/email/suggest-firstname:
+    post:
+      operationId: suggest-firstname
+      tags: [Suggestions]
+      summary: Autocomplete a first name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NameQuery'
+      responses:
+        '200':
+          description: Suggestions.
+          content:
+            application/json:
+              example:
+                query: je
+                suggestions:
+                  - { firstName: Jean, source: insee, popularity: 510000, gender: M, score: 198.2 }
+                  - { firstName: Jessica, source: international, popularity: 65000, gender: F, score: 164.4 }
+                total: 2
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v2/email/suggest-lastname:
+    post:
+      operationId: suggest-lastname
+      tags: [Suggestions]
+      summary: Autocomplete a last name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NameQuery'
+      responses:
+        '200':
+          description: Suggestions.
+          content:
+            application/json:
+              example:
+                query: du
+                suggestions:
+                  - { lastName: Dupont, source: international, popularity: 33000, score: 170.7 }
+                  - { lastName: Durand, source: international, popularity: 29000, score: 168.3 }
+                total: 2
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v2/me:
+    get:
+      operationId: get-me
+      tags: [Platform]
+      summary: Organisation, balance and key
+      description: |
+        Organisation name, credit balance and the calling key: name, environment, whether SMTP is on, caps and usage for the day and the month. Free, never debits a credit.
+
+        - Used as the connection test by automation tools (the [Make](https://docs.yeswecheck.fr/uk/connectors/make) app).
+        - `balance` is `null` on an unlimited plan.
+        - The key's usage (`creditsUsedToday`, `creditsUsedThisMonth`) is tracked only when the key has a cap; otherwise `null`.
+      responses:
+        '200':
+          description: Organisation, balance and key.
+          content:
+            application/json:
+              example:
+                organization: { name: ACME }
+                credits: { unlimited: false, balance: 4819 }
+                apiKey:
+                  name: Make – CRM
+                  environment: live
+                  smtpEnabled: true
+                  creditsUsedToday: 3
+                  creditsUsedThisMonth: 40
+                  maxCreditsPerDay: 500
+                  maxCreditsPerMonth: null
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v2/billing/catalog:
+    get:
+      operationId: get-billing-catalog
+      tags: [Platform]
+      summary: Plan catalogue
+      description: Plans and credit packs, prices excl. VAT in euro cents. Public.
+      security: []
+      responses:
+        '200':
+          description: Catalogue.
+          content:
+            application/json:
+              example:
+                currency: eur
+                taxBehavior: exclusive
+                plans:
+                  - { code: free, name: Free, amountCents: 0, currency: eur, monthlyCredits: 0, unlimited: false, purchasable: false, displayOrder: 0 }
+                  - { code: starter, name: Starter, amountCents: 2900, currency: eur, monthlyCredits: 25000, unlimited: false, purchasable: true, displayOrder: 1 }
+                  - { code: pro, name: Pro, amountCents: 9900, currency: eur, monthlyCredits: 100000, unlimited: false, purchasable: true, displayOrder: 2 }
+                packs:
+                  - { id: 4ecde263-8294-4bd1-a2a4-36d2af920be1, name: Pack 1,000 credits, credits: 1000, priceCents: 500, currency: eur, unitPriceCents: 0.5, purchasable: true, displayOrder: 0 }
+
+  /health:
+    get:
+      operationId: get-health
+      tags: [Platform]
+      summary: API status
+      description: Responds without authentication, outside the `/v2` prefix. For the incident history, see https://status.yeswecheck.fr/uk.
+      security: []
+      responses:
+        '200':
+          description: The API is responding.
+          content:
+            application/json:
+              example:
+                status: healthy
+                timestamp: '2026-10-15T14:20:29.819Z'
+                service: yeswecheck-api
+
+components:
+  securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+      bearerFormat: ywc_live_…
+      description: 'API key created in the dashboard (API keys): `Authorization: Bearer ywc_live_…`.'
+
+  headers:
+    RateLimitLimit:
+      description: Requests allowed in the window.
+      schema: { type: integer, example: 100 }
+    RateLimitRemaining:
+      description: Requests remaining in the window.
+      schema: { type: integer, example: 87 }
+    RateLimitReset:
+      description: Seconds until the window resets.
+      schema: { type: integer, example: 42 }
+    RetryAfter:
+      description: Seconds to wait before retrying.
+      schema: { type: integer, example: 42 }
+
+  responses:
+    BadRequest:
+      description: Invalid body or unknown field. `message` is an array.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 400
+            message: [email must be an email]
+            timestamp: '2026-10-15T09:12:44.512Z'
+            path: /v2/email/validate
+    Unauthorized:
+      description: 'Missing or invalid authentication: `No authorization header`, `Invalid or revoked API key`, `Invalid authorization format`.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 401
+            message: Invalid or revoked API key
+            timestamp: '2026-10-15T09:12:44.512Z'
+            path: /v2/email/validate
+    InsufficientCredits:
+      description: Balance used up while SMTP is enabled on the key. Nothing is debited.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 402
+            message: Insufficient credits for SMTP validation
+            code: INSUFFICIENT_CREDITS
+            timestamp: '2026-10-15T09:12:44.512Z'
+            path: /v2/email/validate
+    Forbidden:
+      description: IP or origin not allowed for the key, or widget anti-abuse check.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 403
+            message: 'Access denied: IP address not allowed for this API key'
+            timestamp: '2026-10-15T09:12:44.512Z'
+            path: /v2/email/validate
+    PayloadTooLarge:
+      description: Body larger than 256 KB, rejected before any processing.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 413
+            message: request entity too large
+    TooManyRequests:
+      description: |
+        Four cases, all with `Retry-After`:
+        - per-IP rate limit: **plain-text** body;
+        - key call limit (minute, hour, day): JSON, `code: API_KEY_RATE_LIMITED`;
+        - key credit cap: JSON, `code: API_KEY_BUDGET_EXCEEDED`;
+        - widget anti-abuse: JSON.
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            statusCode: 429
+            message: This key's daily cap has been reached (500/500 credits). It resets at 00:00 UTC.
+            code: API_KEY_BUDGET_EXCEEDED
+            details: { window: day, limit: 500, used: 500, retryAfterSeconds: 21600 }
+            timestamp: '2026-10-15T18:00:00.000Z'
+            path: /v2/email/validate
+        text/plain:
+          schema: { type: string }
+          example: Too many requests from this IP, please try again later
+    RateLimitedText:
+      description: Per-IP rate limit reached. Plain-text body.
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        text/plain:
+          schema: { type: string }
+          example: Too many suggestion requests from this IP, please slow down
+
+  schemas:
+    Error:
+      type: object
+      required: [statusCode, message, timestamp, path]
+      properties:
+        statusCode: { type: integer }
+        message:
+          description: 'Human-readable text, or an array of texts for a body validation error. The `message` is in French by default; send `Accept-Language: en` (or `en-GB`) to receive it in English. Always test the `code`, never the message.'
+          oneOf:
+            - type: string
+            - type: array
+              items: { type: string }
+        code:
+          type: string
+          description: Stable machine code, when there is one. This is the field to test.
+          example: INSUFFICIENT_CREDITS
+        details:
+          type: object
+          additionalProperties: true
+        timestamp: { type: string, format: date-time }
+        path: { type: string }
+
+    ValidateRequest:
+      type: object
+      required: [email]
+      description: The `smtp` and `enrichment` fields are also accepted for compatibility, but **ignored** with an API key; any other field is rejected (`400`).
+      properties:
+        email:
+          type: string
+          format: email
+          example: john.smith@gmail.com
+        country:
+          type: string
+          maxLength: 3
+          description: Reference country for the presumed age (ISO 3166-1 alpha-2 or alpha-3). Takes precedence over the domain's country-code extension.
+          example: FR
+        smtpTimeout:
+          type: integer
+          minimum: 1000
+          maximum: 30000
+          example: 10000
+          description: Maximum wait for replies from the remote SMTP server, in milliseconds. No effect if the key does not have SMTP.
+
+    Verdict:
+      type: string
+      enum: [valid, risky, invalid, unknown]
+      description: |
+        - `valid`: deliverable, with no notable risk signal;
+        - `risky`: deliverable but risky (disposable, trap or malicious domain, score below 70);
+        - `invalid`: will not receive mail;
+        - `unknown`: the server did not allow a conclusion (never billed).
+
+    Feature:
+      type: object
+      description: Result of a check. For risk checks, `result = invalid` means the signal is detected.
+      required: [result, score, message]
+      properties:
+        result:
+          type: string
+          enum: [valid, invalid, unknown]
+        score: { type: integer, minimum: 0, maximum: 100 }
+        message: { type: string, description: 'Human-readable explanation, in English.' }
+        reasonCode: { type: string, description: Stable machine code. }
+        details:
+          type: object
+          additionalProperties: true
+
+    EnrichmentFeature:
+      allOf:
+        - $ref: '#/components/schemas/Feature'
+        - type: object
+          properties:
+            details:
+              type: object
+              properties:
+                firstName: { type: string, example: John }
+                firstNameScore: { type: integer }
+                lastName: { type: string, example: Smith }
+                lastNameScore: { type: integer }
+                gender: { type: string, enum: [male, female, unisex, unknown] }
+                genderScore: { type: integer }
+                presumedAge: { type: integer, description: Absent if the selected country has no age data. }
+                presumedAgeRange: { type: string, example: 55-64 }
+                presumedAgeScore: { type: integer }
+                ageBasis:
+                  type: object
+                  properties:
+                    country: { type: string, example: FR }
+                    resolvedFrom: { type: string, enum: [param, tld, default] }
+                    source: { type: string, nullable: true, example: insee }
+                status: { type: string, enum: [success, partial, failed] }
+
+    Warning:
+      type: object
+      required: [code, severity, message]
+      properties:
+        code:
+          type: string
+          enum:
+            - DISPOSABLE_EMAIL
+            - TYPOSQUAT_DOMAIN
+            - TYPO_DETECTED
+            - TYPO_CORRECTION_VERIFIED
+            - MALICIOUS_DOMAIN
+            - ROLE_ACCOUNT
+            - NO_REPLY
+            - CATCH_ALL_DOMAIN
+            - RANDOM_LOCALPART
+            - PROFANITY
+            - TOR_EXIT_NODE
+            - ANONYMOUS_NETWORK
+            - DATACENTER_IP
+            - DUPLICATED_SUBMITTER
+        severity:
+          type: string
+          enum: [info, warning, error]
+        message: { type: string }
+        data:
+          type: object
+          additionalProperties: true
+
+    PolicyDecision:
+      type: object
+      properties:
+        decision:
+          type: string
+          enum: [accepted, rejected]
+        reasons:
+          type: array
+          items:
+            type: string
+            enum:
+              - reject_disposable
+              - reject_malicious_domain
+              - reject_typosquat
+              - reject_role_account
+              - reject_no_reply
+              - reject_catch_all
+              - reject_free_provider
+              - reject_unknown
+              - reject_on_profanity
+              - reject_on_random_detection
+              - reject_low_quality_score
+              - reject_low_domain_health
+              - reject_vpn_or_tor
+              - reject_datacenter_ip
+        rejectedByClientConfig: { type: boolean }
+
+    ValidationResponse:
+      type: object
+      required: [result, score, freeProvider, businessEmail, disposable, alias, features, metadata]
+      properties:
+        result:
+          $ref: '#/components/schemas/Verdict'
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        freeProvider:
+          type: boolean
+          description: Consumer domain (webmail, internet service provider) or disposable domain.
+        businessEmail:
+          type: boolean
+          description: Business address.
+        disposable:
+          type: boolean
+          description: Disposable domain.
+        alias:
+          type: boolean
+          description: Sub-addressed address (`john+tag@…`). For information only.
+        finalDecision:
+          type: string
+          enum: [accepted, rejected]
+          description: Decision of the validation policy. Only evaluates the policy's rules; `accepted` when there is no policy.
+        policy:
+          $ref: '#/components/schemas/PolicyDecision'
+        warnings:
+          type: array
+          description: Risk signals found. Absent when there are none.
+          items:
+            $ref: '#/components/schemas/Warning'
+        features:
+          type: object
+          description: Details of each check. A check disabled on the key is absent.
+          properties:
+            syntax: { $ref: '#/components/schemas/Feature' }
+            dns: { $ref: '#/components/schemas/Feature' }
+            smtp: { $ref: '#/components/schemas/Feature' }
+            catchAll:
+              type: object
+              description: Present when the domain is accept-all.
+              properties:
+                result: { type: string, enum: [unknown] }
+                isCatchAll: { type: boolean }
+                reasonCode: { type: string, example: ACCEPT_ALL_DOMAIN }
+                message: { type: string }
+            disposable: { $ref: '#/components/schemas/Feature' }
+            maliciousDomains: { $ref: '#/components/schemas/Feature' }
+            roleAccount: { $ref: '#/components/schemas/Feature' }
+            noReply:
+              allOf:
+                - $ref: '#/components/schemas/Feature'
+              description: "Noreply address (a mailbox nobody reads). `invalid` = signal present; a valid or unknown verdict becomes risky. Absent if disabled on the key."
+            profanity: { $ref: '#/components/schemas/Feature' }
+            randomDetection: { $ref: '#/components/schemas/Feature' }
+            aliasing: { $ref: '#/components/schemas/Feature' }
+            typoDomain: { $ref: '#/components/schemas/Feature' }
+            typosquat: { $ref: '#/components/schemas/Feature' }
+            typoCorrection:
+              type: object
+              description: Corrected address verified as deliverable. Present only in that case.
+              properties:
+                correctedDomain: { type: string, example: gmail.com }
+                correctedEmail: { type: string, example: john.smith@gmail.com }
+            enrichment: { $ref: '#/components/schemas/EnrichmentFeature' }
+            listCheck: { $ref: '#/components/schemas/Feature' }
+            domainHealth:
+              type: object
+              description: Domain health (MX, SPF, DMARC, age). Absent for the major public providers.
+              additionalProperties: true
+            network:
+              type: object
+              description: Analysis of the IP calling the API. For a server-side call, that is your server.
+              additionalProperties: true
+        metadata:
+          type: object
+          properties:
+            requestId: { type: string, description: Unique identifier of the call. }
+            timestamp: { type: string, format: date-time }
+            processingTime: { type: integer, description: Processing time in milliseconds. }
+            credits:
+              type: object
+              properties:
+                used: { type: integer, enum: [0, 1] }
+                remaining: { type: integer, description: 'Balance after the call; only filled in when SMTP ran, 0 otherwise.' }
+                breakdown:
+                  type: object
+                  additionalProperties: { type: integer }
+            apiVersion: { type: string, example: '2.0' }
+
+    DomainSuggestion:
+      type: object
+      properties:
+        domain: { type: string, example: hotmail.fr }
+        provider: { type: string, example: Microsoft }
+        type: { type: string, enum: [webmail, isp, professional, secure] }
+        popularity: { type: integer, minimum: 1, maximum: 15 }
+        score: { type: number }
+
+    NameQuery:
+      type: object
+      required: [query]
+      properties:
+        query:
+          type: string
+          description: Partial input. Accepted aliases `partial` and `input`.
+          example: je
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 20
+          default: 10
