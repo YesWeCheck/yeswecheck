@@ -64,6 +64,7 @@
 ## Quickstart
 
 **1.** [Create a free account](https://app.yeswecheck.fr/uk/register?src=github) (100 welcome credits, no card) and create an API key.
+
 **2.** Verify an address:
 
 ```bash
@@ -83,7 +84,10 @@ curl https://api.yeswecheck.fr/v2/email/validate \
   "freeProvider": false,
   "businessEmail": true,
   "finalDecision": "accepted", // your key's policy, if you set one
-  "features": { "syntax": { … }, "dns": { … }, "smtp": { "reasonCode": "MAILBOX_EXISTS", … } },
+  "features": {                // the detail of every check
+    "smtp": { "result": "valid", "reasonCode": "MAILBOX_EXISTS" }
+    // syntax, dns, disposable, typoDomain…
+  },
   "metadata": { "credits": { "used": 1, "remaining": 4819 }, "apiVersion": "2.0" }
 }
 ```
@@ -172,10 +176,10 @@ Each check is reported in `features`, so you always know *why* an address got it
 
 | Verdict | Meaning | Typical action |
 |---|---|---|
-| 🟢 `valid` | Deliverable, no notable risk signal | Accept |
-| 🟠 `risky` | Deliverable, but disposable, lookalike, malicious, no-reply, or low score | Accept with care, or reject on sensitive forms |
-| 🔴 `invalid` | Will not receive mail: bad syntax, no mail server, mailbox rejected | Reject, show the typo suggestion if any |
-| ⚪ `unknown` | The mail server did not allow a conclusion. **Never billed** | Accept and monitor |
+| 🟢&nbsp;`valid` | Deliverable, no notable risk signal | Accept |
+| 🟠&nbsp;`risky` | Deliverable, but disposable, lookalike, malicious, no-reply, or low score | Accept with care, or reject on sensitive forms |
+| 🔴&nbsp;`invalid` | Will not receive mail: bad syntax, no mail server, mailbox rejected | Reject, show the typo suggestion if any |
+| ⚪&nbsp;`unknown` | The mail server did not allow a conclusion. **Never billed** | Accept and monitor |
 
 More in [Verdicts and score](docs/verdicts.md) and [Response](docs/response.md).
 
