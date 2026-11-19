@@ -150,7 +150,14 @@ test("free endpoints are replayed after a network error or a 503", async () => {
 test("a timeout is reported as such", async () => {
   const slow = (url, init) =>
     new Promise((_, reject) => init.signal.addEventListener("abort", () => reject(init.signal.reason)));
-  await assert.rejects(new YesWeCheck({ apiKey: KEY, fetch: slow, timeoutMs: 20 }).validate("a@b.co"), (e) => e instanceof YesWeCheckConnectionError && e.timedOut);
+  // Before Node 24, AbortSignal.timeout() does not keep the event loop alive on its own
+  // (a real request does, through its socket): hold it open for the duration of the test.
+  const keepAlive = setTimeout(() => {}, 5_000);
+  try {
+    await assert.rejects(new YesWeCheck({ apiKey: KEY, fetch: slow, timeoutMs: 20 }).validate("a@b.co"), (e) => e instanceof YesWeCheckConnectionError && e.timedOut);
+  } finally {
+    clearTimeout(keepAlive);
+  }
 });
 
 test("suggestTypo sends an email or a domain", async () => {
