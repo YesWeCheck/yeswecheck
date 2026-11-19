@@ -1,0 +1,15 @@
+meta {
+  name: Organisation, balance and key
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v2/me
+  body: none
+  auth: inherit
+}
+
+docs {
+  Your credit balance, the key's settings and its usage against its caps. Free: no credit used.
+}

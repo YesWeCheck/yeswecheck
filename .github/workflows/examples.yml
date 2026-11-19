@@ -1,0 +1,74 @@
+name: Examples
+
+on:
+  push:
+    branches: [main]
+    paths: ["examples/**", "tools/**", ".github/workflows/examples.yml"]
+  pull_request:
+    paths: ["examples/**", "tools/**", ".github/workflows/examples.yml"]
+  schedule:
+    - cron: "0 6 * * 1" # every Monday: catches breaking releases of the frameworks
+
+permissions:
+  contents: read
+
+jobs:
+  javascript:
+    name: ${{ matrix.example }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - example: nextjs-signup
+            check: npx next build
+          - example: express-middleware
+            check: node --check server.js && node --check email-check.js
+          - example: nestjs
+            check: npm run build
+          - example: zod-refinement
+            check: npm run typecheck
+    defaults:
+      run:
+        working-directory: examples/${{ matrix.example }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: npm install --no-audit --no-fund
+      - run: ${{ matrix.check }}
+
+  python:
+    name: fastapi + django
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: pip install -r examples/fastapi/requirements.txt "django>=5.2"
+      - name: FastAPI app loads
+        working-directory: examples/fastapi
+        run: YWC_API_KEY=ywc_test_ci python -c "import main; print(main.app.title)"
+      - name: Django app compiles
+        run: python -m compileall -q examples/django
+
+  php:
+    name: laravel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+      - name: Syntax
+        run: find examples/laravel -name "*.php" -not -name "*.blade.php" -print0 | xargs -0 -n1 php -l
+
+  collections:
+    name: API collections
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Postman collection is valid JSON
+        run: python3 -m json.tool tools/postman/yeswecheck.postman_collection.json > /dev/null

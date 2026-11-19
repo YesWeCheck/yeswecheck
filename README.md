@@ -210,6 +210,21 @@ if (res.result === "invalid") {
 
 Another language? The [OpenAPI specification](openapi/) generates a client in seconds.
 
+### Recipes for your framework
+
+<p>
+  <a href="examples/nextjs-signup/"><img src=".github/assets/logos/nextjs.svg" width="40" alt="Next.js" title="Next.js"></a>
+  <a href="examples/express-middleware/"><img src=".github/assets/logos/express.svg" width="40" alt="Express" title="Express"></a>
+  <a href="examples/nestjs/"><img src=".github/assets/logos/nestjs.svg" width="40" alt="NestJS" title="NestJS"></a>
+  <a href="examples/zod-refinement/"><img src=".github/assets/logos/zod.svg" width="40" alt="Zod" title="Zod"></a>
+  <a href="examples/fastapi/"><img src=".github/assets/logos/fastapi.svg" width="40" alt="FastAPI" title="FastAPI"></a>
+  <a href="examples/django/"><img src=".github/assets/logos/django.svg" width="40" alt="Django" title="Django"></a>
+  <a href="examples/laravel/"><img src=".github/assets/logos/laravel.svg" width="40" alt="Laravel" title="Laravel"></a>
+  <a href="examples/curl/"><img src=".github/assets/logos/curl.svg" width="40" alt="curl" title="curl"></a>
+</p>
+
+Sign-up forms, middleware and validation schemas, ready to copy: [**browse the examples**](examples/). To try the API by hand, import the [Postman or Bruno collection](tools/).
+
 ## Integrations
 
 <table>
@@ -261,6 +276,8 @@ See the [production checklist](docs/guides/production-checklist.md) before going
 | [`openapi/`](openapi/) | The OpenAPI 3.0 specification of the public API |
 | [`packages/js/`](packages/js/) | `@yeswecheck/sdk`, the JavaScript and TypeScript SDK |
 | [`packages/cli/`](packages/cli/) | `yeswecheck`, the command-line tool |
+| [`examples/`](examples/) | Recipes for Next.js, Express, NestJS, Zod, FastAPI, Django, Laravel and curl |
+| [`tools/`](tools/) | Postman and Bruno collections, and a `requests.http` file for your editor |
 | [`integrations/`](integrations/) | MCP server setup and `server.json`, Make app, CRM connectors, form widget, Zapier and n8n |
 
 ## Pricing

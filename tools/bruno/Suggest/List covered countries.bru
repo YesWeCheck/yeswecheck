@@ -1,0 +1,15 @@
+meta {
+  name: List covered countries
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v2/email/suggest/domain/countries
+  body: none
+  auth: inherit
+}
+
+docs {
+  Countries with a dedicated domain ranking. Free: no credit used.
+}

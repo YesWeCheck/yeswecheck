@@ -1,0 +1,22 @@
+meta {
+  name: Autocomplete a last name
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/v2/email/suggest-lastname
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "query": "Smi",
+    "limit": 5
+  }
+}
+
+docs {
+  Free: no credit used.
+}

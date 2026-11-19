@@ -1,0 +1,22 @@
+meta {
+  name: Enrich an address
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/v2/email/enrich
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "jane.doe@company.co.uk",
+    "country": "GB"
+  }
+}
+
+docs {
+  First name, last name, gender and presumed age guessed from the address. Free: no credit used.
+}

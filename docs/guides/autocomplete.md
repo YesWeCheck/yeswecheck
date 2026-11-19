@@ -23,7 +23,7 @@ Each call counts towards the [key's call limit](../rate-limits.md#limits-per-api
 
 ## Suggest a domain
 
-<Endpoint method="POST" path="/v2/email/suggest/domain" auth="API key" />
+**`POST /v2/email/suggest/domain`** · API key
 
 ```bash
 curl https://api.yeswecheck.fr/v2/email/suggest/domain \
@@ -55,7 +55,7 @@ curl https://api.yeswecheck.fr/v2/email/suggest/domain \
 
 ## Detect a typo
 
-<Endpoint method="POST" path="/v2/email/suggest/typo-domain" auth="API key" />
+**`POST /v2/email/suggest/typo-domain`** · API key
 
 Same engine and same normalisation as verification: the two surfaces can never suggest two different corrections for the same address.
 
@@ -93,7 +93,7 @@ curl https://api.yeswecheck.fr/v2/email/suggest/typo-domain \
 
 ## Generate local parts
 
-<Endpoint method="POST" path="/v2/email/suggest/localpart?domain=example.com" auth="API key" />
+**`POST /v2/email/suggest/localpart?domain=example.com`** · API key
 
 ```bash
 curl "https://api.yeswecheck.fr/v2/email/suggest/localpart?domain=example.com" \
@@ -121,7 +121,7 @@ curl "https://api.yeswecheck.fr/v2/email/suggest/localpart?domain=example.com" \
 
 ## Autocomplete a first name or last name
 
-<Endpoint method="POST" path="/v2/email/suggest-firstname" auth="API key" />
+**`POST /v2/email/suggest-firstname`** · API key
 
 ```bash
 curl https://api.yeswecheck.fr/v2/email/suggest-firstname \
@@ -145,7 +145,7 @@ curl https://api.yeswecheck.fr/v2/email/suggest-firstname \
 
 ## Enrich an address
 
-<Endpoint method="POST" path="/v2/email/enrich" auth="API key" />
+**`POST /v2/email/enrich`** · API key
 
 The enrichment from verification, without the verification.
 

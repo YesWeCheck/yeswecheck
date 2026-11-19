@@ -1,0 +1,11 @@
+<form method="post" novalidate>
+  {% csrf_token %}
+  {{ form.name.label_tag }} {{ form.name }} {{ form.name.errors }}
+  {{ form.email.label_tag }} {{ form.email }}
+  {% for error in form.email.errors %}<p class="error">{{ error }}</p>{% endfor %}
+  {% if form.suggestion %}
+    {# Resubmits the form with the corrected address. #}
+    <button type="submit" name="email" value="{{ form.suggestion }}" formnovalidate>Use {{ form.suggestion }}</button>
+  {% endif %}
+  <button type="submit">Create my account</button>
+</form>

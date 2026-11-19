@@ -1,0 +1,27 @@
+meta {
+  name: Generate local parts
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/v2/email/suggest/localpart?domain=company.co.uk
+  body: json
+  auth: inherit
+}
+
+params:query {
+  domain: company.co.uk
+}
+
+body:json {
+  {
+    "firstName": "Jane",
+    "lastName": "Doe",
+    "maxResults": 5
+  }
+}
+
+docs {
+  Likely local parts for a person (`jane.doe`, `jdoe`…). With `domain`, each suggestion carries the full address. Free: no credit used.
+}

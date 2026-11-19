@@ -1,0 +1,22 @@
+meta {
+  name: Autocomplete a first name
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/v2/email/suggest-firstname
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "query": "Oli",
+    "limit": 5
+  }
+}
+
+docs {
+  Free: no credit used.
+}

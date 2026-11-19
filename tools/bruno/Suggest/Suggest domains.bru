@@ -1,0 +1,23 @@
+meta {
+  name: Suggest domains
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v2/email/suggest/domain
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "partial": "gm",
+    "country": "GB",
+    "count": 5
+  }
+}
+
+docs {
+  Domain autocomplete after the `@`, ranked by popularity in the country. Free: no credit used.
+}

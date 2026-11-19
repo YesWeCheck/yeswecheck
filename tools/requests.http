@@ -1,0 +1,138 @@
+# YesWeCheck API: every request, ready to send.
+# VS Code: install the REST Client extension, export YWC_API_KEY, then click "Send Request".
+# JetBrains IDEs: put your key on the @apiKey line below (and don't commit it).
+
+@baseUrl = https://api.yeswecheck.fr
+@apiKey = {{$processEnv YWC_API_KEY}}
+
+### Verify · Verify an address
+# Runs every check enabled on your key and returns a verdict: `valid`, `risky`, `invalid` or `unknown`.
+# 1 credit if your key has SMTP enabled and the verdict is not `unknown`. Otherwise free.
+# @name validate
+POST {{baseUrl}}/v2/email/validate
+Authorization: Bearer {{apiKey}}
+Accept-Language: en-GB
+Content-Type: application/json
+
+{
+  "email": "jane.doe@company.co.uk"
+}
+
+### Verify · Verify with a reference country
+# `country` sets the reference country for the presumed age (ISO 3166-1). `smtpTimeout` caps the wait for the remote mail server, in milliseconds (1,000–30,000).
+# @name validate-country
+POST {{baseUrl}}/v2/email/validate
+Authorization: Bearer {{apiKey}}
+Accept-Language: en-GB
+Content-Type: application/json
+
+{
+  "email": "jane.doe@company.co.uk",
+  "country": "GB",
+  "smtpTimeout": 10000
+}
+
+### Verify · Enrich an address
+# First name, last name, gender and presumed age guessed from the address. Free: no credit used.
+# @name enrich
+POST {{baseUrl}}/v2/email/enrich
+Authorization: Bearer {{apiKey}}
+Accept-Language: en-GB
+Content-Type: application/json
+
+{
+  "email": "jane.doe@company.co.uk",
+  "country": "GB"
+}
+
+### Suggest · Detect a typo
+# Suggests a fix for a mistyped domain. Send `email` or `domain`. Free: no credit used.
+# @name typo
+POST {{baseUrl}}/v2/email/suggest/typo-domain
+Authorization: Bearer {{apiKey}}
+Accept-Language: en-GB
+Content-Type: application/json
+
+{
+  "email": "jane@gmial.com"
+}
+
+### Suggest · Suggest domains
+# Domain autocomplete after the `@`, ranked by popularity in the country. Free: no credit used.
+# @name domains
+POST {{baseUrl}}/v2/email/suggest/domain
+Authorization: Bearer {{apiKey}}
+Accept-Language: en-GB
+Content-Type: application/json
+
+{
+  "partial": "gm",
+  "country": "GB",
+  "count": 5
+}
+
+### Suggest · List covered countries
+# Countries with a dedicated domain ranking. Free: no credit used.
+# @name countries
+GET {{baseUrl}}/v2/email/suggest/domain/countries
+Authorization: Bearer {{apiKey}}
+Accept-Language: en-GB
+
+### Suggest · Generate local parts
+# Likely local parts for a person (`jane.doe`, `jdoe`…). With `domain`, each suggestion carries the full address. Free: no credit used.
+# @name localpart
+POST {{baseUrl}}/v2/email/suggest/localpart?domain=company.co.uk
+Authorization: Bearer {{apiKey}}
+Accept-Language: en-GB
+Content-Type: application/json
+
+{
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "maxResults": 5
+}
+
+### Suggest · Autocomplete a first name
+# Free: no credit used.
+# @name first-name
+POST {{baseUrl}}/v2/email/suggest-firstname
+Authorization: Bearer {{apiKey}}
+Accept-Language: en-GB
+Content-Type: application/json
+
+{
+  "query": "Oli",
+  "limit": 5
+}
+
+### Suggest · Autocomplete a last name
+# Free: no credit used.
+# @name last-name
+POST {{baseUrl}}/v2/email/suggest-lastname
+Authorization: Bearer {{apiKey}}
+Accept-Language: en-GB
+Content-Type: application/json
+
+{
+  "query": "Smi",
+  "limit": 5
+}
+
+### Account · Organisation, balance and key
+# Your credit balance, the key's settings and its usage against its caps. Free: no credit used.
+# @name me
+GET {{baseUrl}}/v2/me
+Authorization: Bearer {{apiKey}}
+Accept-Language: en-GB
+
+### Account · Plan catalogue
+# Plans and credit packs, with prices. No key needed.
+# @name catalog
+GET {{baseUrl}}/v2/billing/catalog
+Accept-Language: en-GB
+
+### Status · API status
+# No key needed.
+# @name health
+GET {{baseUrl}}/health
+Accept-Language: en-GB

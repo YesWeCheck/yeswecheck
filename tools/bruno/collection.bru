@@ -1,0 +1,21 @@
+headers {
+  Accept-Language: en-GB
+}
+
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{apiKey}}
+}
+
+docs {
+  Every request of the YesWeCheck email verification API.
+
+  1. Get a free API key: https://app.yeswecheck.fr/uk/register?src=bruno
+  2. Set the `apiKey` environment variable (Production environment).
+  3. Send **Verify an address**.
+
+  Documentation: https://docs.yeswecheck.fr/uk
+}

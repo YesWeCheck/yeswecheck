@@ -1,0 +1,23 @@
+meta {
+  name: Verify an address
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v2/email/validate
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "jane.doe@company.co.uk"
+  }
+}
+
+docs {
+  Runs every check enabled on your key and returns a verdict: `valid`, `risky`, `invalid` or `unknown`.
+
+  1 credit if your key has SMTP enabled **and** the verdict is not `unknown`. Otherwise free.
+}

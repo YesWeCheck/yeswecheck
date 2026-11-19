@@ -1,0 +1,23 @@
+meta {
+  name: Verify with a reference country
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v2/email/validate
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "jane.doe@company.co.uk",
+    "country": "GB",
+    "smtpTimeout": 10000
+  }
+}
+
+docs {
+  `country` sets the reference country for the presumed age (ISO 3166-1). `smtpTimeout` caps the wait for the remote mail server, in milliseconds (1,000–30,000).
+}

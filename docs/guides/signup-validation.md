@@ -4,7 +4,7 @@
 
 Typical use cases: sign-up, customer account creation, adding a contact to a CRM, order taking. Your server receives the address, calls YesWeCheck and decides.
 
-<Endpoint method="POST" path="/v2/email/validate" auth="API key" />
+**`POST /v2/email/validate`** · API key
 
 ## Choose the key
 

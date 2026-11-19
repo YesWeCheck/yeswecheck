@@ -1,0 +1,21 @@
+meta {
+  name: Detect a typo
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v2/email/suggest/typo-domain
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "email": "jane@gmial.com"
+  }
+}
+
+docs {
+  Suggests a fix for a mistyped domain. Send `email` or `domain`. Free: no credit used.
+}

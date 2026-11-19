@@ -1,0 +1,482 @@
+{
+  "info": {
+    "name": "YesWeCheck API",
+    "description": "Every request of the YesWeCheck email verification API.\n\n1. Get a free API key: https://app.yeswecheck.fr/uk/register?src=postman\n2. Set the `apiKey` variable.\n3. Send **Verify an address**.\n\nDocumentation: https://docs.yeswecheck.fr/uk",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{apiKey}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.yeswecheck.fr",
+      "type": "string"
+    },
+    {
+      "key": "apiKey",
+      "value": "",
+      "type": "string",
+      "description": "Your key: ywc_live_… or ywc_test_…"
+    }
+  ],
+  "item": [
+    {
+      "name": "Verify",
+      "item": [
+        {
+          "name": "Verify an address",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en-GB",
+                "description": "Error messages in English"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v2/email/validate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "email",
+                "validate"
+              ]
+            },
+            "description": "Runs every check enabled on your key and returns a verdict: `valid`, `risky`, `invalid` or `unknown`.\n\n1 credit if your key has SMTP enabled **and** the verdict is not `unknown`. Otherwise free.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jane.doe@company.co.uk\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"has a verdict\", () => pm.expect([\"valid\", \"risky\", \"invalid\", \"unknown\"]).to.include(pm.response.json().result));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Verify with a reference country",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en-GB",
+                "description": "Error messages in English"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v2/email/validate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "email",
+                "validate"
+              ]
+            },
+            "description": "`country` sets the reference country for the presumed age (ISO 3166-1). `smtpTimeout` caps the wait for the remote mail server, in milliseconds (1,000–30,000).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jane.doe@company.co.uk\",\n  \"country\": \"GB\",\n  \"smtpTimeout\": 10000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Enrich an address",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en-GB",
+                "description": "Error messages in English"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v2/email/enrich",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "email",
+                "enrich"
+              ]
+            },
+            "description": "First name, last name, gender and presumed age guessed from the address. Free: no credit used.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jane.doe@company.co.uk\",\n  \"country\": \"GB\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Suggest",
+      "item": [
+        {
+          "name": "Detect a typo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en-GB",
+                "description": "Error messages in English"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v2/email/suggest/typo-domain",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "email",
+                "suggest",
+                "typo-domain"
+              ]
+            },
+            "description": "Suggests a fix for a mistyped domain. Send `email` or `domain`. Free: no credit used.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jane@gmial.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Suggest domains",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en-GB",
+                "description": "Error messages in English"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v2/email/suggest/domain",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "email",
+                "suggest",
+                "domain"
+              ]
+            },
+            "description": "Domain autocomplete after the `@`, ranked by popularity in the country. Free: no credit used.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"partial\": \"gm\",\n  \"country\": \"GB\",\n  \"count\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "List covered countries",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en-GB",
+                "description": "Error messages in English"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v2/email/suggest/domain/countries",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "email",
+                "suggest",
+                "domain",
+                "countries"
+              ]
+            },
+            "description": "Countries with a dedicated domain ranking. Free: no credit used."
+          }
+        },
+        {
+          "name": "Generate local parts",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en-GB",
+                "description": "Error messages in English"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v2/email/suggest/localpart?domain=company.co.uk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "email",
+                "suggest",
+                "localpart"
+              ],
+              "query": [
+                {
+                  "key": "domain",
+                  "value": "company.co.uk"
+                }
+              ]
+            },
+            "description": "Likely local parts for a person (`jane.doe`, `jdoe`…). With `domain`, each suggestion carries the full address. Free: no credit used.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\",\n  \"maxResults\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Autocomplete a first name",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en-GB",
+                "description": "Error messages in English"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v2/email/suggest-firstname",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "email",
+                "suggest-firstname"
+              ]
+            },
+            "description": "Free: no credit used.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Oli\",\n  \"limit\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Autocomplete a last name",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en-GB",
+                "description": "Error messages in English"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v2/email/suggest-lastname",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "email",
+                "suggest-lastname"
+              ]
+            },
+            "description": "Free: no credit used.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Smi\",\n  \"limit\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Account",
+      "item": [
+        {
+          "name": "Organisation, balance and key",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en-GB",
+                "description": "Error messages in English"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v2/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "me"
+              ]
+            },
+            "description": "Your credit balance, the key's settings and its usage against its caps. Free: no credit used."
+          }
+        },
+        {
+          "name": "Plan catalogue",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en-GB",
+                "description": "Error messages in English"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/v2/billing/catalog",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v2",
+                "billing",
+                "catalog"
+              ]
+            },
+            "description": "Plans and credit packs, with prices. No key needed.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Status",
+      "item": [
+        {
+          "name": "API status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept-Language",
+                "value": "en-GB",
+                "description": "Error messages in English"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "No key needed.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
