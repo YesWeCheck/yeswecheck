@@ -1,0 +1,21 @@
+{
+  "name": "yeswecheck",
+  "version": "0.1.0",
+  "description": "Verify email addresses from your terminal: one address or a whole CSV, with the YesWeCheck API",
+  "keywords": ["email", "email-verification", "email-validation", "cli", "csv", "smtp", "yeswecheck"],
+  "homepage": "https://github.com/YesWeCheck/yeswecheck/tree/main/packages/cli#readme",
+  "bugs": "https://github.com/YesWeCheck/yeswecheck/issues",
+  "repository": { "type": "git", "url": "git+https://github.com/YesWeCheck/yeswecheck.git", "directory": "packages/cli" },
+  "license": "MIT",
+  "author": "YesWeCheck <contact@yeswecheck.fr> (https://yeswecheck.fr/uk)",
+  "type": "module",
+  "bin": { "yeswecheck": "dist/cli.js" },
+  "files": ["dist", "README.md"],
+  "engines": { "node": ">=20.19" },
+  "dependencies": { "@yeswecheck/sdk": "^0.1.0" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --test test/cli.test.mjs",
+    "prepublishOnly": "npm run build && npm test"
+  }
+}

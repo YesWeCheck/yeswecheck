@@ -117,6 +117,10 @@ Use a key **without SMTP**: all the other checks are free. `ywc_test_` keys work
 
 Yes: `GET /v2/me` returns your organisation's balance and the calling key's usage, free of charge. You can also read `metadata.credits.remaining` in validation responses with SMTP, and turn on balance alerts in **Settings → Notifications**. An agent connected to the [MCP server](https://docs.yeswecheck.fr/uk/connectors/mcp) reads the balance with the `get_credits` tool.
 
+### Are there SDKs?
+
+Yes. This repository ships the [JavaScript and TypeScript SDK](../packages/js/) (`npm i @yeswecheck/sdk`) and a [command-line tool](../packages/cli/) (`npx yeswecheck`). For any other language, the [OpenAPI specification](../openapi/openapi.yaml) generates a client, and the dashboard's **API console** shows the calling code in nine languages.
+
 ### How do I know if the API is available?
 
 [status.yeswecheck.fr](https://status.yeswecheck.fr/uk) shows the status of the services and the incident history. For your own monitoring, `GET https://api.yeswecheck.fr/health` responds without authentication.

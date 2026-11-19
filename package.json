@@ -1,0 +1,20 @@
+{
+  "name": "yeswecheck-monorepo",
+  "private": true,
+  "description": "Official SDKs, CLI and examples for the YesWeCheck email verification API",
+  "workspaces": [
+    "packages/js",
+    "packages/cli"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm test --workspaces"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}

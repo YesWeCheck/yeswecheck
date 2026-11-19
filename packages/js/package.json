@@ -1,0 +1,28 @@
+{
+  "name": "@yeswecheck/sdk",
+  "version": "0.1.0",
+  "description": "Official JavaScript and TypeScript SDK for the YesWeCheck email verification API",
+  "keywords": ["email", "email-verification", "email-validation", "smtp", "mx", "disposable-email", "deliverability", "yeswecheck"],
+  "homepage": "https://github.com/YesWeCheck/yeswecheck/tree/main/packages/js#readme",
+  "bugs": "https://github.com/YesWeCheck/yeswecheck/issues",
+  "repository": { "type": "git", "url": "git+https://github.com/YesWeCheck/yeswecheck.git", "directory": "packages/js" },
+  "license": "MIT",
+  "author": "YesWeCheck <contact@yeswecheck.fr> (https://yeswecheck.fr/uk)",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "README.md"],
+  "sideEffects": false,
+  "engines": { "node": ">=20.19" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --test test/client.test.mjs",
+    "prepublishOnly": "npm run build && npm test"
+  }
+}

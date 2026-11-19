@@ -6,6 +6,8 @@
 </a>
 
 <p align="center">
+  <a href="https://github.com/YesWeCheck/yeswecheck/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/YesWeCheck/yeswecheck/ci.yml?style=flat-square&label=CI"></a>
+  <a href="https://www.npmjs.com/package/@yeswecheck/sdk"><img alt="npm" src="https://img.shields.io/npm/v/@yeswecheck/sdk?style=flat-square&color=22C55E&label=npm"></a>
   <a href="https://docs.yeswecheck.fr/uk"><img alt="API v2" src="https://img.shields.io/badge/API-v2-0B1220?style=flat-square"></a>
   <a href="openapi/openapi.yaml"><img alt="OpenAPI 3.0" src="https://img.shields.io/badge/OpenAPI-3.0-0B1220?style=flat-square"></a>
   <a href="https://docs.yeswecheck.fr/uk/connectors/mcp"><img alt="MCP server" src="https://img.shields.io/badge/MCP-server-22C55E?style=flat-square"></a>
@@ -21,6 +23,7 @@
 <p align="center">
   <a href="https://app.yeswecheck.fr/uk/register?src=github"><b>Get a free API key</b></a> ·
   <a href="docs/quickstart.md">Quickstart</a> ·
+  <a href="#sdks-and-cli">SDKs</a> ·
   <a href="docs/README.md">Docs</a> ·
   <a href="https://yeswecheck.fr/uk">Website</a> ·
   <a href="https://status.yeswecheck.fr/uk">Status</a>
@@ -183,6 +186,30 @@ Each check is reported in `features`, so you always know *why* an address got it
 
 More in [Verdicts and score](docs/verdicts.md) and [Response](docs/response.md).
 
+## SDKs and CLI
+
+<p align="center">
+  <img alt="yeswecheck verifying three addresses, then a CSV file" src=".github/assets/cli-demo.svg" width="100%">
+</p>
+
+| | Package | Install |
+|---|---|---|
+| 🟨 | [**JavaScript / TypeScript SDK**](packages/js/): typed, zero dependencies, Node, Bun, Deno and edge | `npm i @yeswecheck/sdk` |
+| ⌨️ | [**Command-line tool**](packages/cli/): one address or a whole CSV, from your terminal | `npx yeswecheck jane.doe@company.co.uk` |
+
+```ts
+import { YesWeCheck, suggestedEmail } from "@yeswecheck/sdk";
+
+const ywc = new YesWeCheck(); // reads YWC_API_KEY
+const res = await ywc.validate("jane.doe@gmial.com");
+
+if (res.result === "invalid") {
+  const fix = suggestedEmail(res); // "jane.doe@gmail.com": ask "Did you mean…?"
+}
+```
+
+Another language? The [OpenAPI specification](openapi/) generates a client in seconds.
+
 ## Integrations
 
 <table>
@@ -229,6 +256,8 @@ See the [production checklist](docs/guides/production-checklist.md) before going
 |---|---|
 | [`docs/`](docs/) | The documentation in Markdown: quickstart, verdicts, response, errors, limits, credits, guides |
 | [`openapi/`](openapi/) | The OpenAPI 3.0 specification of the public API |
+| [`packages/js/`](packages/js/) | `@yeswecheck/sdk`, the JavaScript and TypeScript SDK |
+| [`packages/cli/`](packages/cli/) | `yeswecheck`, the command-line tool |
 
 ## Pricing
 

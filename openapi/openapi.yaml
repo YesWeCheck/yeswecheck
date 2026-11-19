@@ -482,7 +482,7 @@ paths:
                   - { code: starter, name: Starter, amountCents: 2900, currency: eur, monthlyCredits: 25000, unlimited: false, purchasable: true, displayOrder: 1 }
                   - { code: pro, name: Pro, amountCents: 9900, currency: eur, monthlyCredits: 100000, unlimited: false, purchasable: true, displayOrder: 2 }
                 packs:
-                  - { id: 4ecde263-8294-4bd1-a2a4-36d2af920be1, name: Pack 1,000 credits, credits: 1000, priceCents: 500, currency: eur, unitPriceCents: 0.5, purchasable: true, displayOrder: 0 }
+                  - { id: 4ecde263-8294-4bd1-a2a4-36d2af920be1, name: 'Pack 1,000 credits', credits: 1000, priceCents: 500, currency: eur, unitPriceCents: 0.5, purchasable: true, displayOrder: 0 }
 
   /health:
     get:
