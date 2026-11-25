@@ -94,6 +94,7 @@ paths:
                     alias: false
                     finalDecision: accepted
                     policy: { decision: accepted, reasons: [], rejectedByClientConfig: false }
+                    debug_ref: YWC-7KQ2M9AB
                     features:
                       syntax: { result: valid, score: 100, message: '…', details: { normalizedEmail: john.smith@gmail.com } }
                       dns: { result: valid, score: 100, message: '…', reasonCode: MX_FOUND }
@@ -788,6 +789,10 @@ components:
           description: Decision of the validation policy. Only evaluates the policy's rules; `accepted` when there is no policy.
         policy:
           $ref: '#/components/schemas/PolicyDecision'
+        debug_ref:
+          type: string
+          example: YWC-7KQ2M9AB
+          description: Short reference for this check, to give to support. Kept for 90 days.
         warnings:
           type: array
           description: Risk signals found. Absent when there are none.

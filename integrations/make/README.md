@@ -49,8 +49,11 @@ Main outputs, to map into the following modules:
 | Score (0-100) | Deliverability score |
 | Free email provider, Business email, Disposable, Alias | Yes/no flags |
 | Policy decision | `accepted` or `rejected`, per the key's validation policy |
-| Checks | Detail of each check (`syntax`, `dns`, `smtp`…): result, score, reason code — see [checks](../../docs/checks.md) |
-| Metadata | Request ID, verification date, credits used and remaining |
+| Policy | Decision and reasons for a rejection by the policy (`reasons`) |
+| Warnings | Risk signals found: code, severity, message |
+| Checks | Detail of each check (`syntax`, `dns`, `smtp`…): result, score, reason code, details — see [checks](../../docs/checks.md). Also **Typo correction** (corrected address, verified) and **Domain health** |
+| Metadata | Request ID, verification date, credits used and remaining, API version |
+| Support reference | `YWC-…` reference of the check, to give to [support](../../docs/response.md#debug-ref) |
 
 The output is exactly the [API response](../../docs/response.md).
 
